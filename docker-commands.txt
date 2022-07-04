@@ -1,0 +1,50 @@
+# to install docker on ubantu
+
+$ curl -fsSL https://get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh
+
+$ docker images
+		OR
+$ docker image ls
+
+$ docker pull tomcat:jdk15
+
+$ docker build -t imageName
+
+$ docker run -p 8080:8080 imageid
+		OR
+$ docker run -t -i -p 8080:8080 imageName
+
+
+
+$ docker run containername
+** This will search for local container if not found then download the image from dockerHub and execute run cmd and create container automatically
+
+$ docker container ls
+
+$ docker container exec -it containerId bash
+		OR
+$ docker run -it imageid /bin/bash
+
+# One specific file can be copied TO the container like:
+$ docker cp foo.txt mycontainer:/foo.txt
+
+# One specific file can be copied FROM the container like:
+$ docker cp mycontainer:/foo.txt foo.txt
+
+# Get container name or short container id:
+$ docker ps
+
+$ docker ps -a
+
+# remove image 
+** To delete any image we need to first delete all related containers
+
+$ docker rmi imageID
+
+#remove container
+$ docker rm containerId 
+
+#To pull image from dockerhub 
+$ docker pull image imagename:tag
+eg. docker pull image ubuntu:latest

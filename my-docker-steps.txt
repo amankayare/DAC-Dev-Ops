@@ -1,0 +1,73 @@
+-- login into ec2 aws linux
+$ sudo su
+$ yum install wget -y
+$ amazon-linux-extras install docker 
+$ service docker start 
+$ usermod -a -G docker ec2-user 
+$ docker --version
+$ mkdir demo
+$ cd demo
+$ vi Dockerfile
+
+Enter
+
+FROM ubuntu:18.04 
+# Install dependencies 
+RUN apt-get update && \ apt-get -y install apache2 
+# Install apache and write hello world message 
+RUN echo 'Hello World!' > /var/www/html/index.html 
+# Configure apache RUN echo '. /etc/apache2/envvars' > /root/run_apache.sh && \ echo 'mkdir -p /var/run/apache2' >> /root/run_apache.sh && \ echo 'mkdir -p /var/lock/apache2' >> /root/run_apache.sh && \ echo '/usr/sbin/apache2 -D FOREGROUND' >> /root/run_apache.sh && \ chmod 755 /root/run_apache.sh
+EXPOSE 80 
+CMD /root/run_apache.sh 
+
+$ docker build -t demo .  // imge name demo
+$ docker images  docker run -t -i -p 80:80 demo
+
+--- Open all port of our instance---
+
+open in browser <IP>:80
+
+Done with demo
+
+
+Now Main thing starts from here
+download context.xml
+comment processor cookies
+and the upload on s3
+take take the object url
+and set into Dockerfile -> #context -> wget <URL>
+
+$ docker build -t finaldemo . 
+$ docker images  docker run -t -i -p 8080:8080 finaldemo
+
+CTRL+d or exit
+
+upload war file on s3
+copy object url
+
+$ vi Dockerfile
+
+replace old # Creating Contex.xml  and # Cp command wit this
+# Creating Contex.xml 
+RUN wget https://demo134235.s3.amazonaws.com/sudya/AWSFirstPro1.war
+# Cp command 
+RUN cp AWSFirstPro1.war apache-tomcat-9.0.40/webapps 
+
+now replace RUN with CMD 
+CMD ["apache-tomcat-9.0.40/bin/catalina.sh", "run"] 
+
+
+
+$ docker build -t myproject . 
+$ docker images  docker run -t -i -p 8080:8080 myproject
+
+Now hit URL on browser
+
+if connect refusses? then
+set Iam 
+select ec2 -> action -> security
+now add policy EMR_EC2_defaultRole
+open it
+click attach policies
+search for s3_full_access 
+ 
